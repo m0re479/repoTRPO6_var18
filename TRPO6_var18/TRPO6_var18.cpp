@@ -96,6 +96,22 @@ public:
     }
 };
 
+//Для демонстрации работы программы добавим ещё один вариант одежды - летний костюм
+class SummerSuit : public Clothes {
+    std::string brand;
+public:
+    SummerSuit(std::string brand_) : brand(brand_) {}
+    ~SummerSuit() {}
+
+    void getDressed() {
+        std::cout << "Надеть летний костюм от " << this->brand << std::endl;
+    }
+
+    void print() {
+        std::cout << "Летний костюм " << this->brand << std::endl;
+    }
+};
+
 //Создадим абстрактную фабрику по созданию элементов одежды
 class AbstractFactory {
 public:
@@ -124,6 +140,16 @@ public:
     }
 };
 
+//Новая фабрика для категории "Ежедневная одежда"
+class DailyClothesFactory : public AbstractFactory {
+    virtual Shoes* createShoes(std::string br) {
+        return new Sneakers(br);
+    }
+    virtual Clothes* createClothes(std::string br) {
+        return new SummerSuit(br);
+    }
+};
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -137,6 +163,16 @@ int main()
     clothingItems.push_back(factory->createShoes("Ecco"));
     clothingItems.push_back(factory->createClothes("N°21"));
 
+    /*for (ClothingItems* cloth : clothingItems) {
+        cloth->print();
+    }
+    std::cout << std::endl;*/
+
+    //Для добавления одной новой категории вещей достаточно добавить одну конкретную фабрику
+    //Пример использования:
+    factory = new DailyClothesFactory();//фабрика для ежедневных вещей
+    clothingItems.push_back(factory->createShoes("Ecco"));
+    clothingItems.push_back(factory->createClothes("Calvin Klein"));
     for (ClothingItems* cloth : clothingItems) {
         cloth->print();
     }
